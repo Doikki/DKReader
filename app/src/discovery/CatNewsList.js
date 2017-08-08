@@ -4,21 +4,26 @@ import {
     Text,
     ListView,
     RefreshControl,
+    Dimensions,
+    Image,
+    View
 } from 'react-native';
-import NewsItem from "./NewsItem";
+import NewsItem from "../home/NewsItem";
 
-export default class HomeScreen extends Component {
+let {width} = Dimensions.get('window');
+
+export default class CatNewsList extends Component {
 
     constructor() {
         super();
         this.list = [];
-        this.index = 0;
+        this.index = 1;
         this.state = {
             dataSource: new ListView.DataSource({//数据源
                 rowHasChanged: (row1, row2) => row1 !== row2,
             }),
             isLoading: true,
-            isError: false
+            isError: false,
         }
     }
 
@@ -31,7 +36,7 @@ export default class HomeScreen extends Component {
     }
 
     renderListView() {
-        return (<ListView
+        return <ListView
             dataSource={this.state.dataSource}
             renderRow={this.renderData.bind(this)} // 渲染listView的每一个item，必须实现
             onEndReachedThreshold={100}//触发ListView滑动到最后一个item回调的阈值
@@ -42,7 +47,7 @@ export default class HomeScreen extends Component {
                     refreshing={this.state.isLoading}
                     onRefresh={() => this.onRefresh()}
                 />}
-        />)
+        />
     }
 
     renderData(result) {
@@ -59,13 +64,13 @@ export default class HomeScreen extends Component {
             isLoading: true
         });
         this.index++;
-        this.getHomeData();
+        this.getNewsList();
     }
 
     onRefresh() {
-        this.index = 0;
+        this.index = 1;
         this.list = [];
-        this.getHomeData();
+        this.getNewsList();
     }
 
     renderError() {
@@ -73,12 +78,13 @@ export default class HomeScreen extends Component {
     }
 
     componentDidMount() {
-        this.getHomeData();
+        this.list = [];
+        this.getNewsList();
     }
 
-    getHomeData() {
+    getNewsList() {
         console.log("loading...");
-        return fetch(`http://reader.smartisan.com/index.php?r=line/show&offset=${this.index}&page_size=20`)
+        return fetch(`http://reader.smartisan.com/index.php?r=find/GetArticleList&cate_id=${this.props.catid}&art_id=&page_size=20`)
             .then((response) => response.json())
             .then((responseData) => {
                 let data = responseData.data.list;
@@ -87,7 +93,7 @@ export default class HomeScreen extends Component {
                 });
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(this.list),
-                    isLoading: false
+                    isLoading: false,
                 });
             })
             .catch((error) => {

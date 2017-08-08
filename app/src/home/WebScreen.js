@@ -7,7 +7,14 @@ import {
 
 export default class WebScreen extends Component {
 
+    // static navigationOptions = () => ({
+    //     gesturesEnabled: true,
+    // });
+
+
     render() {
-        return (<WebView source={{uri: this.props.navigation.state.params.url}}/>)
+        return (<WebView
+            startInLoadingState={true}
+            source={{uri: this.props.navigation.state.params.url}}/>)
     }
 }
