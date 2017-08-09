@@ -8,7 +8,7 @@ import {
     Dimensions
 } from 'react-native';
 
-let {width, height} = Dimensions.get('window');//解构赋值，获取屏幕宽高
+let global = require('../global');
 
 export default class NewsItem extends Component {
 
@@ -26,7 +26,9 @@ export default class NewsItem extends Component {
         // const {navigate} = this.props.navigation;
         return (
             <TouchableOpacity
-                onPress={() => {this.props.navigation.navigate('Web', {url: itemData.origin_url, title: itemData.title});}}>
+                onPress={() => {
+                    this.props.navigation.navigate('Web', {url: itemData.origin_url, title: itemData.title});
+                }}>
                 <View style={styles.container}>
                     <Text style={styles.title} numberOfLines={2}>{itemData.title}</Text>
                     <Text numberOfLines={3} style={styles.brief}>{itemData.brief}</Text>
@@ -63,8 +65,8 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
     divider: {
-        backgroundColor: '#D3D3D3',
+        backgroundColor: global.dividerColor,
         height: 1,
-        width: width
+        width: global.screenWidth
     }
 });

@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
-import CatNewsList from "./CatNewsList";
+import CatNewsList from "../component/CatNewsList";
 
 export default class DvScreen extends Component {
 

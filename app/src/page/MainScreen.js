@@ -1,22 +1,22 @@
 import {TabNavigator} from 'react-navigation';
-import DvScreen from "./discovery/DvScreen";
-import ScScreen from "./subscribe/ScScreen";
-import UsrScreen from "./user/UsrScreen";
-import HomeScreen from "./home/HomeScreen";
+import DvScreen from "./DvScreen";
+import ScScreen from "./ScScreen";
+import UsrScreen from "./UsrScreen";
+import HomeScreen from "./HomeScreen";
 import {
     StyleSheet,
     Image
 } from 'react-native';
 import React, {Component} from 'react';
 
-let home_n = require('../img/home_n.png');
-let home_s = require('../img/home_s.png');
-let dv_n = require('../img/discovery_n.png');
-let dv_s = require('../img/discovery_s.png');
-let sc_n = require('../img/subscribe_n.png');
-let sc_s = require('../img/subscribe_s.png');
-let usr_n = require('../img/user_n.png');
-let usr_s = require('../img/user_s.png');
+let home_n = require('../../img/home_n.png');
+let home_s = require('../../img/home_s.png');
+let dv_n = require('../../img/discovery_n.png');
+let dv_s = require('../../img/discovery_s.png');
+let sc_n = require('../../img/subscribe_n.png');
+let sc_s = require('../../img/subscribe_s.png');
+let usr_n = require('../../img/user_n.png');
+let usr_s = require('../../img/user_s.png');
 
 
 const MainTab = TabNavigator({

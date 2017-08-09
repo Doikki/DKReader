@@ -1,12 +1,12 @@
 import {StackNavigator} from 'react-navigation';
-import HomeScreen from "./home/HomeScreen";
+import HomeScreen from "./page/HomeScreen";
 
 import React from 'react';
-import MainTab from "./MainScreen";
-import ScScreen from "./subscribe/ScScreen";
-import DvScreen from "./discovery/DvScreen";
-import UsrScreen from "./user/UsrScreen";
-import WebScreen from "./home/WebScreen";
+import MainTab from "./page/MainScreen";
+import ScScreen from "./page/ScScreen";
+import DvScreen from "./page/DvScreen";
+import UsrScreen from "./page/UsrScreen";
+import WebScreen from "./page/WebScreen";
 
 
 const Nav = StackNavigator({
