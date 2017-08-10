@@ -4,9 +4,15 @@ import {
     Text,
     ListView,
     RefreshControl,
+    Button,
+    View
 } from 'react-native';
 import NewsItem from "../component/NewsItem";
+import HttpUtil from "../util/HttpUtil";
+
 let global = require('../global');
+
+const BASE_URL = 'http://reader.smartisan.com/index.php';
 
 export default class HomeScreen extends Component {
 
@@ -53,8 +59,6 @@ export default class HomeScreen extends Component {
     }
 
     _onEndReached() {
-        console.log("滑到底部了~");
-        // ToastAndroid.show("滑到底部了~", ToastAndroid.SHORT);
         if (this.state.isLoading) return;
         this.setState({
             isLoading: true
@@ -70,7 +74,12 @@ export default class HomeScreen extends Component {
     }
 
     renderError() {
-        return (<Text>ERROR</Text>)
+        return <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={{fontSize: 16, padding: 10}}>Something Happened...</Text>
+            <Button title="retry" onPress={() => {
+                this.getHomeData();
+            }}/>
+        </View>
     }
 
     componentDidMount() {
@@ -78,9 +87,31 @@ export default class HomeScreen extends Component {
     }
 
     getHomeData() {
-        return fetch(`http://reader.smartisan.com/index.php?r=line/show&offset=${this.index}&page_size=20`)
-            .then((response) => response.json())
-            .then((responseData) => {
+        global.storage.getIdsForKey(global.scKey).then(data => {
+
+            let params = {
+                r: 'line/show',
+                offset: this.index,
+                page_size: 20
+            };
+            if (data.length > 0) {
+                let ids = '1,';
+                data.map(item => {
+                    ids = ids + item + ',';
+                });
+                params = {
+                    r: 'visitor/getList',
+                    offset: this.index,
+                    page_size: 20,
+                    site_ids: ids
+                };
+            }
+
+            HttpUtil.get(BASE_URL, params, (responseData) => {
+                if (responseData.code !== 0) {
+                    this.setState({isLoading: false, isError: true});
+                    return;
+                }
                 let data = responseData.data.list;
                 data.map((item) => {
                     this.list.push(item);
@@ -89,15 +120,9 @@ export default class HomeScreen extends Component {
                     dataSource: this.state.dataSource.cloneWithRows(this.list),
                     isLoading: false
                 });
-            })
-            .catch((error) => {
-                this.setState({
-                    isError: true
-                });
-                this.index--;
-                console.error(error);
-            })
-            .done();
+            });
+        });
+
     }
 }
 

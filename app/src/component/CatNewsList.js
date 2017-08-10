@@ -6,9 +6,11 @@ import {
     RefreshControl,
     Dimensions,
     Image,
-    View
+    View,
+    Button
 } from 'react-native';
 import NewsItem from "./NewsItem";
+import HttpUtil from "../util/HttpUtil";
 
 let global = require('../global');
 
@@ -57,8 +59,6 @@ export default class CatNewsList extends Component {
     }
 
     _onEndReached() {
-        console.log("滑到底部了~");
-        // ToastAndroid.show("滑到底部了~", ToastAndroid.SHORT);
         if (this.state.isLoading) return;
         this.setState({
             isLoading: true
@@ -74,7 +74,13 @@ export default class CatNewsList extends Component {
     }
 
     renderError() {
-        return (<Text>ERROR</Text>)
+        return <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={{fontSize: 16, padding: 10}}>Something Happened...</Text>
+            <Button title="retry" onPress={() => {
+                this.setState({isLoading: true, isError: false});
+                this.getNewsList();
+            }}/>
+        </View>
     }
 
     componentDidMount() {
@@ -83,27 +89,21 @@ export default class CatNewsList extends Component {
     }
 
     getNewsList() {
-        console.log("loading...");
-        return fetch(`http://reader.smartisan.com/index.php?r=find/GetArticleList&cate_id=${this.props.catid}&art_id=&page_size=20`)
-            .then((response) => response.json())
-            .then((responseData) => {
-                let data = responseData.data.list;
-                data.map((item) => {
-                    this.list.push(item);
-                });
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(this.list),
-                    isLoading: false,
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isError: true
-                });
-                this.index--;
-                console.error(error);
-            })
-            .done();
+        let params = {r: 'find/GetArticleList', cate_id: this.props.catid, page_size: 20};
+        HttpUtil.get('http://reader.smartisan.com/index.php', params, (responseData) => {
+            if (responseData.code !== 0) {
+                this.setState({isLoading:false, isError: true});
+                return;
+            }
+            let data = responseData.data.list;
+            data.map((item) => {
+                this.list.push(item);
+            });
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(this.list),
+                isLoading: false,
+            });
+        });
     }
 }
 

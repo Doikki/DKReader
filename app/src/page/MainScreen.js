@@ -5,9 +5,9 @@ import UsrScreen from "./UsrScreen";
 import HomeScreen from "./HomeScreen";
 import {
     StyleSheet,
-    Image
+    Image,
 } from 'react-native';
-import React, {Component} from 'react';
+import React from 'react';
 
 let home_n = require('../../img/home_n.png');
 let home_s = require('../../img/home_s.png');
@@ -22,14 +22,15 @@ let usr_s = require('../../img/user_s.png');
 const MainTab = TabNavigator({
     Home: {
         screen: HomeScreen,
-        navigationOptions: {
+        navigationOptions: ({navigation}) => ({
             tabBarIcon: ({focused, tintColor}) => (
                 <Image
                     source={focused ? home_s : home_n}
                     style={styles.tabImg}/>
             ),
-            title: "滴水阅读"
-        }
+            headerTitle: "滴水阅读",
+            headerTitleStyle: {alignSelf: 'center'}
+        })
     },
     Dv: {
         screen: DvScreen,
@@ -39,7 +40,8 @@ const MainTab = TabNavigator({
                     source={focused ? dv_s : dv_n}
                     style={styles.tabImg}/>
             ),
-            title: "发现"
+            headerTitle: "发现",
+            headerTitleStyle: {alignSelf: 'center'}
         }
     },
     Sc: {
@@ -51,7 +53,8 @@ const MainTab = TabNavigator({
                     style={styles.tabImg}
                     resizeMode='contain'/>
             ),
-            title: "订阅"
+            headerTitle: "订阅",
+            headerTitleStyle: {alignSelf: 'center'}
         }
     },
     Usr: {
@@ -62,7 +65,8 @@ const MainTab = TabNavigator({
                     source={focused ? usr_s : usr_n}
                     style={styles.tabImg}/>
             ),
-            title: "我的"
+            headerTitle: "我的",
+            headerTitleStyle: {alignSelf: 'center'}
         }
     },
 }, {
@@ -89,4 +93,8 @@ const styles = StyleSheet.create({
         height: 24,
         width: 24,
     },
+    title: {
+        fontSize: 20,
+        color: 'black'
+    }
 });

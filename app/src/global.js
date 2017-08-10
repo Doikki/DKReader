@@ -4,8 +4,9 @@ import {AsyncStorage, Dimensions} from 'react-native';
 const {height, width} = Dimensions.get('window');
 
 module.exports = {
+    //持久化存储
     storage: new Storage({
-// 最大容量，默认值1000条数据循环存储
+        // 最大容量，默认值1000条数据循环存储
         size: 1000,
 
         // 存储引擎：对于RN使用AsyncStorage，对于web使用window.localStorage
@@ -31,5 +32,6 @@ module.exports = {
     dividerColor: '#D3D3D3',
     listViewBackgroundColor: '#F5FCFF',
     screenWidth: width,
-    screenHeight: height
+    screenHeight: height,
+    scKey: 'sc'
 };

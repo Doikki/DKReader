@@ -7,6 +7,7 @@ import ScScreen from "./page/ScScreen";
 import DvScreen from "./page/DvScreen";
 import UsrScreen from "./page/UsrScreen";
 import WebScreen from "./page/WebScreen";
+import TestScreen from "./page/TestScreen";
 
 
 const Nav = StackNavigator({
@@ -15,7 +16,8 @@ const Nav = StackNavigator({
     Web: {screen: WebScreen},
     Sc: {screen: ScScreen},
     Dv: {screen: DvScreen},
-    Usr: {screen: UsrScreen}
+    Usr: {screen: UsrScreen},
+    Test: {screen: TestScreen}
 });
 
 export default Nav;
