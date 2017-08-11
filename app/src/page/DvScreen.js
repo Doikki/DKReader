@@ -6,7 +6,8 @@ import {
 } from 'react-native';
 
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
-import CatNewsList from "../component/CatNewsList";
+import CommonNewsList from "../component/CommonNewsList";
+import LoadingView from "../component/LoadingView";
 
 export default class DvScreen extends Component {
 
@@ -31,15 +32,13 @@ export default class DvScreen extends Component {
                                                       tabStyle={{height: 39}}
                                                       underlineHeight={2}/>}>
                 {this.cat.map((item) => {
-                    return <CatNewsList key={item.cate_info.id} {...this.props} catid={item.cate_info.id}
-                                        tabLabel={item.cate_info.name}/>
+                    return <CommonNewsList key={item.id} {...this.props} catId={item.id}
+                                           tabLabel={item.name} action={"find/GetArticleList"}/>
                 })}
 
             </ScrollableTabView> : null;
         if (this.state.isLoading) {
-            return <View style={styles.container}>
-                <Text style={styles.loading}>Loading...</Text>
-                </View>;
+            return <LoadingView/>;
         } else {
             return tab;
         }
@@ -51,15 +50,13 @@ export default class DvScreen extends Component {
     }
 
     getCat() {
-        return fetch(`http://reader.smartisan.com/index.php?r=find/GetCateList&cate_ids=`)
+        return fetch(`http://reader.smartisan.com/index.php?r=find/getInterestList`)
             .then((response) => response.json())
             .then((responseData) => {
                 this.cat = responseData.data;
                 this.cat.unshift({
-                    cate_info: {
-                        id: 999,
-                        name: '精选'
-                    }
+                    id: 999,
+                    name: '精选'
                 });
                 this.setState({
                     isLoading: false,
@@ -71,13 +68,3 @@ export default class DvScreen extends Component {
             .done();
     }
 }
-const styles = StyleSheet.create({
-    loading: {
-        fontSize: 20
-    },
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-});

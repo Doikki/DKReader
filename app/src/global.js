@@ -30,8 +30,9 @@ module.exports = {
     themeColor: '#393A3E',
     titleTextColor: '#000000',
     dividerColor: '#D3D3D3',
-    listViewBackgroundColor: '#F5FCFF',
+    listViewBackgroundColor: 'white',
     screenWidth: width,
     screenHeight: height,
-    scKey: 'sc'
+    scKey: 'sc',
+    pageSize: 20
 };

@@ -92,7 +92,7 @@ export default class HomeScreen extends Component {
             let params = {
                 r: 'line/show',
                 offset: this.index,
-                page_size: 20
+                page_size: global.pageSize
             };
             if (data.length > 0) {
                 let ids = '1,';
@@ -102,7 +102,7 @@ export default class HomeScreen extends Component {
                 params = {
                     r: 'visitor/getList',
                     offset: this.index,
-                    page_size: 20,
+                    page_size: global.pageSize,
                     site_ids: ids
                 };
             }

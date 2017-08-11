@@ -14,12 +14,13 @@ import HttpUtil from "../util/HttpUtil";
 
 let global = require('../global');
 
-export default class CatNewsList extends Component {
+export default class CommonNewsList extends Component {
 
     constructor() {
         super();
         this.list = [];
-        this.index = 1;
+        this.index = 0;
+        this.artId = '';
         this.state = {
             dataSource: new ListView.DataSource({//数据源
                 rowHasChanged: (row1, row2) => row1 !== row2,
@@ -68,8 +69,9 @@ export default class CatNewsList extends Component {
     }
 
     onRefresh() {
-        this.index = 1;
+        this.index = 0;
         this.list = [];
+        this.artId = '';
         this.getNewsList();
     }
 
@@ -89,14 +91,25 @@ export default class CatNewsList extends Component {
     }
 
     getNewsList() {
-        let params = {r: 'find/GetArticleList', cate_id: this.props.catid, page_size: 20};
+        let params = '';
+        switch (this.props.action){
+            case "find/GetArticleList": //获取发现分类新闻列表
+                params = {r: this.props.action, cate_id: this.props.catId, page_size: global.pageSize, art_id: this.artId};
+                break;
+
+            case "article/getList": //获取订阅站点新闻列表
+                params = {r: this.props.action, site_id: this.props.siteId, page_size: global.pageSize, offset: this.index};
+                break;
+
+        }
         HttpUtil.get('http://reader.smartisan.com/index.php', params, (responseData) => {
             if (responseData.code !== 0) {
                 this.setState({isLoading:false, isError: true});
                 return;
             }
             let data = responseData.data.list;
-            data.map((item) => {
+            data.map((item, position) => {
+                if (position === 19) this.artId = item.id;
                 this.list.push(item);
             });
             this.setState({

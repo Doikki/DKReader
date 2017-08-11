@@ -25,23 +25,26 @@ export default class NewsItem extends Component {
             source={{uri: itemData.prepic3}}/>;
         // const {navigate} = this.props.navigation;
         return (
-            <TouchableOpacity
-                onPress={() => {
-                    this.props.navigation.navigate('Web', {url: itemData.origin_url, title: itemData.title, siteImg: itemData.site_info.pic, siteName: itemData.site_info.name, siteInfo: itemData.site_info});
-                }}>
-                <View style={styles.container}>
-                    <Text style={styles.title} numberOfLines={2}>{itemData.title}</Text>
-                    <Text numberOfLines={2} style={styles.brief}>{itemData.brief}</Text>
-                    <View style={styles.imageContainer}>
-                        {pic1}{pic2}{pic3}
+            <View>
+                <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.navigate('Web', {url: itemData.origin_url, title: itemData.title, siteImg: itemData.site_info.pic, siteName: itemData.site_info.name, siteInfo: itemData.site_info});
+                    }}>
+                    <View style={styles.container}>
+                        <Text style={styles.title} numberOfLines={2}>{itemData.title}</Text>
+                        <Text numberOfLines={2} style={styles.brief}>{itemData.brief}</Text>
+                        <View style={styles.imageContainer}>
+                            {pic1}{pic2}{pic3}
+                        </View>
+                        <View style={styles.siteContainer}>
+                            <Image style={styles.siteImg} source={{uri: itemData.site_info.pic}}/>
+                            <Text>{itemData.site_info.name}</Text>
+                        </View>
                     </View>
-                    <View style={styles.siteContainer}>
-                        <Image style={styles.siteImg} source={{uri: itemData.site_info.pic}}/>
-                        <Text>{itemData.site_info.name}</Text>
-                    </View>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.divider}/>
-            </TouchableOpacity>
+            </View>
+
         );
     }
 }
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
     title: {
         color: '#333333',
         fontSize: 16,
-        fontWeight: '600',
+        fontWeight: '400',
     },
     brief: {
         paddingTop: 5,
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
     },
     divider: {
         backgroundColor: global.dividerColor,
-        height: 1,
+        height: 0.5,
         width: global.screenWidth
     },
     siteImg: {
