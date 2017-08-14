@@ -38,7 +38,7 @@ export default class NewsItem extends Component {
                         </View>
                         <View style={styles.siteContainer}>
                             <Image style={styles.siteImg} source={{uri: itemData.site_info.pic}}/>
-                            <Text>{itemData.site_info.name}</Text>
+                            <Text style={{fontSize:12}}>{itemData.site_info.name}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     image: {
-        height: 80,
-        width: 80,
+        height: 70,
+        width: 70,
         marginRight: 6,
         marginTop: 3,
         marginBottom:3
@@ -74,17 +74,19 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
     divider: {
-        backgroundColor: global.dividerColor,
+        backgroundColor: global.lineColor,
         height: 0.5,
         width: global.screenWidth
     },
     siteImg: {
-        width: 18,
-        height: 18,
-        marginRight: 6
+        width: 16,
+        height: 16,
+        marginRight: 6,
+        borderRadius: 8
     },
     siteContainer: {
         marginTop: 4,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems:'center'
     }
 });

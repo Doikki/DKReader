@@ -9,14 +9,11 @@ import {
 } from 'react-native';
 import React from 'react';
 
-let home_n = require('../../img/home_n.png');
-let home_s = require('../../img/home_s.png');
-let dv_n = require('../../img/discovery_n.png');
-let dv_s = require('../../img/discovery_s.png');
-let sc_n = require('../../img/subscribe_n.png');
-let sc_s = require('../../img/subscribe_s.png');
-let usr_n = require('../../img/user_n.png');
-let usr_s = require('../../img/user_s.png');
+let home = require('../../img/tab_home.png');
+let dv = require('../../img/tab_discovery.png');
+let sc = require('../../img/tab_subscribe.png');
+let usr = require('../../img/tab_user.png');
+let global = require('../global');
 
 
 const MainTab = TabNavigator({
@@ -25,11 +22,12 @@ const MainTab = TabNavigator({
         navigationOptions: ({navigation}) => ({
             tabBarIcon: ({focused, tintColor}) => (
                 <Image
-                    source={focused ? home_s : home_n}
-                    style={styles.tabImg}/>
+                    source={home}
+                    style={[styles.tabImg, {tintColor: tintColor}]}/>
             ),
-            headerTitle: "滴水阅读",
-            headerTitleStyle: {alignSelf: 'center'}
+            title: '主页',
+            headerTitle: "水滴阅读",
+            headerTitleStyle: {alignSelf: 'center'},
         })
     },
     Dv: {
@@ -37,9 +35,10 @@ const MainTab = TabNavigator({
         navigationOptions: {
             tabBarIcon: ({focused, tintColor}) => (
                 <Image
-                    source={focused ? dv_s : dv_n}
-                    style={styles.tabImg}/>
+                    source={dv}
+                    style={[styles.tabImg, {tintColor: tintColor}]}/>
             ),
+            title: '发现',
             headerTitle: "发现",
             headerTitleStyle: {alignSelf: 'center'}
         }
@@ -49,10 +48,10 @@ const MainTab = TabNavigator({
         navigationOptions: {
             tabBarIcon: ({focused, tintColor}) => (
                 <Image
-                    source={focused ? sc_s : sc_n}
-                    style={styles.tabImg}
-                    resizeMode='contain'/>
+                    source={sc}
+                    style={[styles.tabImg, {tintColor: tintColor}]}/>
             ),
+            title: '订阅',
             headerTitle: "订阅",
             headerTitleStyle: {alignSelf: 'center'}
         }
@@ -62,9 +61,10 @@ const MainTab = TabNavigator({
         navigationOptions: {
             tabBarIcon: ({focused, tintColor}) => (
                 <Image
-                    source={focused ? usr_s : usr_n}
-                    style={styles.tabImg}/>
+                    source={usr}
+                    style={[styles.tabImg, {tintColor: tintColor}]}/>
             ),
+            title: '我的',
             headerTitle: "我的",
             headerTitleStyle: {alignSelf: 'center'}
         }
@@ -75,12 +75,24 @@ const MainTab = TabNavigator({
     lazy: true,
     tabBarOptions: {
         showIcon: true,
-        showLabel: false,
+        showLabel: true,
+        pressColor: global.lineColor,
+        activeTintColor: global.themeColor,
+        inactiveTintColor: global.inactiveColor,
         style: {
-            marginBottom: -2,
-            backgroundColor: '#FCFCFC',
+            height: 50,
+            backgroundColor: 'white',
         },
-        tabStyle: {}
+        indicatorStyle: {
+            backgroundColor: 'transparent'
+        },
+        labelStyle: {
+            fontSize: 10,
+            marginTop: 2
+        },
+        iconStyle: {
+            marginTop: -2
+        }
     },
     tabBarPosition: 'bottom',
     backBehavior: true, //直接退出,而不是回到第一个页面

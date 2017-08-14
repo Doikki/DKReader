@@ -69,6 +69,6 @@ const styles = StyleSheet.create({
     line: {
         width: global.screenWidth,
         height: 0.5,
-        backgroundColor: global.dividerColor
+        backgroundColor: global.lineColor
     },
 });

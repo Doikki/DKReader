@@ -47,6 +47,7 @@ export default class HomeScreen extends Component {
             refreshControl={//下拉刷新
                 <RefreshControl
                     refreshing={this.state.isLoading}
+                    colors={[global.themeColor]}
                     onRefresh={() => this.onRefresh()}
                 />}
         />)

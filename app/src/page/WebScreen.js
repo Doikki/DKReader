@@ -51,7 +51,7 @@ export default class WebScreen extends Component {
                 </View>
                 <View style={styles.webContainer}>
                     <WebView
-                        javaScriptEnabled={false}
+                        javaScriptEnabled={true}
                         startInLoadingState={true}
                         source={{uri: params.url}}/>
                 </View>
@@ -96,13 +96,14 @@ const styles = StyleSheet.create({
         width: 18,
         height: 18,
         marginRight: 6,
+        borderRadius: 9
     },
     siteName: {
         flex: 1,
     },
     scBtn: {
         borderWidth: 0.5,
-        borderColor: 'gray',
+        borderColor: global.lineColor,
         borderRadius: 4,
         paddingLeft: 12,
         paddingRight: 12,

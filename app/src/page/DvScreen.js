@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native';
 
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import CommonNewsList from "../component/CommonNewsList";
 import LoadingView from "../component/LoadingView";
+
+let global = require('../global');
 
 export default class DvScreen extends Component {
 
@@ -22,12 +19,10 @@ export default class DvScreen extends Component {
     render() {
         let tab = this.cat.length > 0 ?
             <ScrollableTabView
-                tabBarInactiveTextColor='gray'
-                tabBarActiveTextColor='black'
                 tabBarBackgroundColor='white'
-                tabBarUnderlineColor='red'
-                ref="scrollableTabView"
-                initialPage={0}
+                tabBarActiveTextColor={global.themeColor}
+                tabBarInactiveTextColor={global.inactiveColor}
+                tabBarUnderlineStyle={{backgroundColor: global.themeColor}}
                 renderTabBar={() => <ScrollableTabBar style={{height: 40, borderWidth: 0, elevation: 2}}
                                                       tabStyle={{height: 39}}
                                                       underlineHeight={2}/>}>

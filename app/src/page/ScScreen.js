@@ -1,20 +1,17 @@
 import React, {Component} from 'react';
 import {
-    AppRegistry,
     StyleSheet,
     Text,
     View,
     ListView,
     Image,
     TouchableOpacity, // 不透明触摸
-    ToastAndroid,
-    Dimensions,
     ScrollView,
     RefreshControl,
     TouchableWithoutFeedback
 } from 'react-native';
+import Swiper from 'react-native-swiper';
 import HttpUtil from "../util/HttpUtil";
-import ViewPager from 'react-native-viewpager';
 import SiteItem from "../component/SiteItem";
 import LoadingView from "../component/LoadingView";
 
@@ -32,12 +29,11 @@ export default class ScScreen extends Component {
         // 创建数据源
         let dsSite = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         let dsCate = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        let dsBanner = new ViewPager.DataSource({pageHasChanged: (r1, r2) => r1 !== r2});
 
         this.state = {
             dataSourceCate: dsCate,
             dataSourceSite: dsSite,
-            dataSourceBanner: dsBanner,
+            dataSourceBanner: [],
             isLoading: true
         };
     }
@@ -56,7 +52,7 @@ export default class ScScreen extends Component {
             this.setState({
                 dataSourceCate: this.state.dataSourceCate.cloneWithRows(cate),
                 dataSourceSite: this.state.dataSourceSite.cloneWithRows(site),
-                dataSourceBanner: this.state.dataSourceBanner.cloneWithPages(banner),
+                dataSourceBanner: banner,
                 isLoading: false
             });
 
@@ -64,36 +60,72 @@ export default class ScScreen extends Component {
     }
 
     render() {
+        let banner = this.state.dataSourceBanner.length > 0 ? <View>
+            <Swiper
+                autoplay={true}
+                autoplayTimeout={4}
+                showsButtons={false}
+                paginationStyle={{
+                    bottom: 18
+                }}
+                dot={<View style={{
+                    backgroundColor: 'white',
+                    width: 6,
+                    height: 6,
+                    borderRadius: 3,
+                    margin: 4
+                }}/>}
+                activeDot={<View style={{
+                    backgroundColor: global.themeColor,
+                    width: 6,
+                    height: 6,
+                    borderRadius: 3,
+                    margin: 4
+                }}/>}
+                style={{width: global.screenWidth, height: 180}}>
+                {this.state.dataSourceBanner.map((data) => {
+                    return <TouchableWithoutFeedback key={data.id} onPress={() => {
+                        this.props.navigation.navigate('Site', {id: data.id, title: data.name});
+                    }}>
+                        <Image style={{height: 160, width: global.screenWidth - 20, borderRadius: 6, margin: 10}}
+                               source={{uri: data.banner}}/>
+                    </TouchableWithoutFeedback>
+                })}
+            </Swiper>
+            <View style={styles.line}/>
+        </View> : null;
+        let site = <View>
+            <Text style={styles.title}>编辑推荐站点</Text>
+            <View style={styles.line}/>
+            <ListView
+                dataSource={this.state.dataSourceSite}
+                renderRow={this.renderSite.bind(this)}/>
+            <View style={styles.line}/>
+        </View>;
+        let cate = <View>
+            <Text style={styles.title}>站点分类</Text>
+            <View style={styles.line}/>
+            <ListView
+                dataSource={this.state.dataSourceCate}
+                renderRow={this.renderCate.bind(this)}
+                contentContainerStyle={styles.listViewStyle}
+            />
+            <View style={styles.line}/>
+        </View>;
         return this.state.isLoading ? <LoadingView/> : <ScrollView
             style={{backgroundColor: 'white'}}
             refreshControl={//下拉刷新
                 <RefreshControl
                     refreshing={this.state.isLoading}
-                    onRefresh={() => {this.getData()}}
+                    colors={[global.themeColor]}
+                    onRefresh={() => {
+                        this.getData()
+                    }}
                 />}>
             <View>
-                <View style={{margin: 10}}>
-                    <ViewPager
-                        renderPage={this.renderBanner.bind(this)}
-                        dataSource={this.state.dataSourceBanner}
-                        isLoop={true}
-                        autoPlay={true}/>
-                </View>
-                <View style={styles.line}/>
-                <Text style={styles.title}>编辑推荐站点</Text>
-                <View style={styles.line}/>
-                <ListView
-                    dataSource={this.state.dataSourceSite}
-                    renderRow={this.renderSite.bind(this)}/>
-                <View style={styles.line}/>
-                <Text style={styles.title}>站点分类</Text>
-                <View style={styles.line}/>
-                <ListView
-                    dataSource={this.state.dataSourceCate}
-                    renderRow={this.renderCate.bind(this)}
-                    contentContainerStyle={styles.listViewStyle}
-                />
-                <View style={styles.line}/>
+                {banner}
+                {site}
+                {cate}
             </View>
         </ScrollView>
     }
@@ -101,10 +133,16 @@ export default class ScScreen extends Component {
 
     renderSite(rowData) {
         return (
-            <SiteItem pic={rowData.pic} name={rowData.name} brief={rowData.brief} onItemPress={() => {
-                this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
-
-            }}/>
+            <SiteItem
+                pic={rowData.pic}
+                name={rowData.name}
+                cateName={rowData.cate_info[0].name}
+                brief={rowData.brief}
+                showMark={true}
+                onItemPress={() => {
+                    // ToastAndroid.show('点击了' + rowID, ToastAndroid.SHORT);
+                    this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
+                }}/>
 
         );
     }
@@ -179,26 +217,26 @@ const styles = StyleSheet.create({
     line: {
         width: global.screenWidth,
         height: 0.5,
-        backgroundColor: global.dividerColor
+        backgroundColor: global.lineColor
     },
 
     siteLine: {
         width: global.screenWidth - 70,
         height: 0.5,
-        backgroundColor: global.dividerColor,
+        backgroundColor: global.lineColor,
         marginLeft: 60,
         marginRight: 10
     },
 
     cateLine: {
         width: 0.2,
-        backgroundColor: global.dividerColor
+        backgroundColor: global.lineColor
     },
 
     cateBottomLine: {
         width: global.screenWidth / 2,
         height: 0.2,
-        backgroundColor: global.dividerColor
+        backgroundColor: global.lineColor
     },
 
     cateName: {

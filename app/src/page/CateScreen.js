@@ -35,7 +35,12 @@ export default class CateScreen extends Component {
     }
 
     getData() {
-        let params = {r: "site/search", cate_id: this.props.navigation.state.params.id, page_size: global.pageSize, offset: this.index};
+        let params = {
+            r: "site/search",
+            cate_id: this.props.navigation.state.params.id,
+            page_size: global.pageSize,
+            offset: this.index
+        };
         HttpUtil.get(url, params, (responseData) => {
 
             if (responseData.code !== 0) {
@@ -83,7 +88,11 @@ export default class CateScreen extends Component {
     }
 
     renderRow(rowData) {
-        return <SiteItem pic={rowData.pic} name={rowData.name} brief={rowData.brief} onItemPress={() => {
+        return <SiteItem
+            pic={rowData.pic}
+            name={rowData.name}
+            showMark={false}
+            brief={rowData.brief} onItemPress={() => {
             this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
         }}/>
     }

@@ -27,9 +27,10 @@ module.exports = {
         // 或是写到另一个文件里，这里require引入
         // sync: require('你可以另外写一个文件专门处理sync')
     }),
-    themeColor: '#393A3E',
-    titleTextColor: '#000000',
-    dividerColor: '#D3D3D3',
+    themeColor: '#3DC6BC',
+    inactiveColor: '#636363',
+    titleTextColor: 'black',
+    lineColor: '#D3D3D3',
     listViewBackgroundColor: 'white',
     screenWidth: width,
     screenHeight: height,
