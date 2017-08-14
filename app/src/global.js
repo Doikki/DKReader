@@ -34,6 +34,5 @@ module.exports = {
     listViewBackgroundColor: 'white',
     screenWidth: width,
     screenHeight: height,
-    scKey: 'sc',
     pageSize: 20
 };

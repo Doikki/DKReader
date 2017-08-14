@@ -21,6 +21,7 @@ export default class CommonNewsList extends Component {
         this.list = [];
         this.index = 0;
         this.artId = '';
+        this.count = 0;
         this.state = {
             dataSource: new ListView.DataSource({//数据源
                 rowHasChanged: (row1, row2) => row1 !== row2,
@@ -62,6 +63,7 @@ export default class CommonNewsList extends Component {
 
     _onEndReached() {
         if (this.state.isLoading) return;
+        if (this.count === this.list.length) return;
         this.setState({
             isLoading: true
         });
@@ -109,6 +111,7 @@ export default class CommonNewsList extends Component {
                 return;
             }
             let data = responseData.data.list;
+            this.count = Number(responseData.data.count);
             data.map((item, position) => {
                 if (position === 19) this.artId = item.id;
                 this.list.push(item);

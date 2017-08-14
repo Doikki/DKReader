@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     View,
     Image,
-    Dimensions
+    TouchableNativeFeedback
 } from 'react-native';
 
 let global = require('../global');
@@ -26,9 +26,13 @@ export default class NewsItem extends Component {
         // const {navigate} = this.props.navigation;
         return (
             <View>
-                <TouchableOpacity
+                <TouchableNativeFeedback
                     onPress={() => {
-                        this.props.navigation.navigate('Web', {url: itemData.origin_url, title: itemData.title, siteImg: itemData.site_info.pic, siteName: itemData.site_info.name, siteInfo: itemData.site_info});
+                        this.props.navigation.navigate('Web', {url: itemData.origin_url,
+                            title: itemData.title,
+                            siteImg: itemData.site_info.pic,
+                            siteName: itemData.site_info.name,
+                            siteInfo: itemData.site_info});
                     }}>
                     <View style={styles.container}>
                         <Text style={styles.title} numberOfLines={2}>{itemData.title}</Text>
@@ -41,7 +45,7 @@ export default class NewsItem extends Component {
                             <Text style={{fontSize:12}}>{itemData.site_info.name}</Text>
                         </View>
                     </View>
-                </TouchableOpacity>
+                </TouchableNativeFeedback>
                 <View style={styles.divider}/>
             </View>
 

@@ -5,9 +5,10 @@ import {
     WebView,
     Image,
     View,
-    Button,
     TouchableOpacity
 } from 'react-native';
+import ScManager from "../util/ScManager";
+import {PubSub} from 'pubsub-js';
 
 let global = require('../global');
 
@@ -22,21 +23,18 @@ export default class WebScreen extends Component {
 
     componentDidMount() {
         const {params} = this.props.navigation.state;
-        global.storage
-            .getIdsForKey(global.scKey)
-            .then(data => {
-                if (data.length > 0) {
-                    data.map(item => {
-                        if (params.siteInfo.id === item) {
-                            this.setState({isSc: true});
-                        }
-                    })
-                }
-            })
+        ScManager.getScIdList(data => {
+            if (data.length > 0) {
+                data.map((item) => {
+                    if (params.siteInfo.id === item) {
+                        this.setState({isSc: true});
+                    }
+                });
+            }
+        });
     }
 
     render() {
-
         const {params} = this.props.navigation.state;
         return (
             <View style={{flex: 1}}>
@@ -60,18 +58,17 @@ export default class WebScreen extends Component {
     }
 
     onSc(params) {
-        let id = params.siteInfo.id;
+        let siteInfo = params.siteInfo;
         if (this.state.isSc) {
-            global.storage.remove({key: global.scKey, id: id});
+            ScManager.removeScSiteById(siteInfo.id);
             this.setState({isSc: false});
+            PubSub.publish(siteInfo.name, false);
         } else {
-            global.storage.save({
-                key: global.scKey,
-                id: id,
-                data: params.siteInfo
-            });
+            ScManager.addScSite(siteInfo);
             this.setState({isSc: true});
+            PubSub.publish(siteInfo.name, true);
         }
+
     }
 }
 

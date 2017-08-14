@@ -14,13 +14,14 @@ import Swiper from 'react-native-swiper';
 import HttpUtil from "../util/HttpUtil";
 import SiteItem from "../component/SiteItem";
 import LoadingView from "../component/LoadingView";
+import ScManager from "../util/ScManager";
 
 let global = require('../global');
 
 // 一些常亮设置
 const cols = 2;
 const cellWH = global.screenWidth / cols;
-const url = 'http://reader.smartisan.com/index.php?r=myCenter/show&site_ids=1,1780,600,1843';
+const url = 'http://reader.smartisan.com/index.php?r=myCenter/show';
 
 export default class ScScreen extends Component {
 
@@ -29,6 +30,8 @@ export default class ScScreen extends Component {
         // 创建数据源
         let dsSite = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         let dsCate = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+        this.scIds = [];
 
         this.state = {
             dataSourceCate: dsCate,
@@ -43,20 +46,50 @@ export default class ScScreen extends Component {
     }
 
     getData() {
-        HttpUtil.get(url, '', (responseData) => {
 
-            let site = responseData.data.site;
-            let cate = responseData.data.cate;
-            let banner = responseData.data.banner;
+        ScManager.getScIdList(idList => {
+            let params = '';
 
-            this.setState({
-                dataSourceCate: this.state.dataSourceCate.cloneWithRows(cate),
-                dataSourceSite: this.state.dataSourceSite.cloneWithRows(site),
-                dataSourceBanner: banner,
-                isLoading: false
+            if (idList.length > 0) {
+                let ids = '';
+                idList.map(item => {
+                    this.scIds.push(item);
+                    ids = ids + item + ',';
+                });
+
+                params = {site_ids: ids}
+            }
+
+            HttpUtil.get(url, params, (responseData) => {
+
+                let site = responseData.data.site;
+                let cate = responseData.data.cate;
+                let banner = responseData.data.banner;
+
+                let temp = [];
+                site.map((item) => {
+                    let isSc = false;
+                    for (let i = 0; i < idList.length; i++) {
+                        if (item.id === idList[i]) {
+                            isSc = true;
+                            break;
+                        }
+                    }
+                    item.isSc = isSc;
+                    temp.push(item);
+                });
+
+                this.setState({
+                    dataSourceCate: this.state.dataSourceCate.cloneWithRows(cate),
+                    dataSourceSite: this.state.dataSourceSite.cloneWithRows(temp),
+                    dataSourceBanner: banner,
+                    isLoading: false
+                });
+
             });
 
         });
+
     }
 
     render() {
@@ -95,7 +128,14 @@ export default class ScScreen extends Component {
             <View style={styles.line}/>
         </View> : null;
         let site = <View>
-            <Text style={styles.title}>编辑推荐站点</Text>
+            <TouchableWithoutFeedback onPress={() => {
+                this.props.navigation.navigate('SiteList', {title: '编辑推荐站点', action: "myCenter/recommendList"});
+            }}>
+                <View style={styles.reContainer}>
+                    <Text style={styles.reTitle}>编辑推荐站点</Text>
+                    <Image style={styles.moreIcon} source={require('../../img/more.png')}/>
+                </View>
+            </TouchableWithoutFeedback>
             <View style={styles.line}/>
             <ListView
                 dataSource={this.state.dataSourceSite}
@@ -103,7 +143,7 @@ export default class ScScreen extends Component {
             <View style={styles.line}/>
         </View>;
         let cate = <View>
-            <Text style={styles.title}>站点分类</Text>
+            <Text style={styles.siteTitle}>站点分类</Text>
             <View style={styles.line}/>
             <ListView
                 dataSource={this.state.dataSourceCate}
@@ -138,7 +178,9 @@ export default class ScScreen extends Component {
                 name={rowData.name}
                 cateName={rowData.cate_info[0].name}
                 brief={rowData.brief}
+                siteInfo={rowData}
                 showMark={true}
+                isSc={rowData.isSc}
                 onItemPress={() => {
                     // ToastAndroid.show('点击了' + rowID, ToastAndroid.SHORT);
                     this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
@@ -155,11 +197,16 @@ export default class ScScreen extends Component {
                 <View>
                     <View style={styles.cateBottomLine}/>
                     <TouchableOpacity onPress={() => {
-                        this.props.navigation.navigate('Cate', {title: rowData.name, id: rowData.id});
+                        this.props.navigation.navigate('SiteList', {
+                            title: rowData.name,
+                            id: rowData.id,
+                            action: "site/search"
+                        });
                     }}>
-                        <View style={{paddingLeft: 10, height: 60, flexDirection: 'row', alignItems: 'center'}}>
+                        <View style={{paddingLeft: 10, paddingRight:10, height: 60, flexDirection: 'row', alignItems: 'center'}}>
                             <Image source={{uri: rowData.icon}} style={styles.cateIconStyle}/>
                             <Text style={styles.cateName}>{rowData.name}</Text>
+                            <Image style={styles.moreIcon} source={require('../../img/more.png')}/>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.cateBottomLine}/>
@@ -168,14 +215,6 @@ export default class ScScreen extends Component {
             </View>
 
         );
-    }
-
-    renderBanner(data) {
-        return (<TouchableWithoutFeedback onPress={() => {
-            this.props.navigation.navigate('Site', {id: data.id, title: data.name});
-        }}>
-            <Image style={{height: 160, width: global.screenWidth}} source={{uri: data.banner}}/>
-        </TouchableWithoutFeedback>)
     }
 }
 
@@ -206,12 +245,17 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
 
-    title: {
+    siteTitle: {
         backgroundColor: '#ebebeb',
-        fontSize: 14,
+        fontSize: 16,
         paddingTop: 12,
         paddingBottom: 12,
         paddingLeft: 10
+    },
+
+    reTitle: {
+        flex: 1,
+        fontSize: 16,
     },
 
     line: {
@@ -253,6 +297,20 @@ const styles = StyleSheet.create({
         paddingTop: 4,
         paddingBottom: 4,
         fontSize: 12
-    }
+    },
 
+    moreIcon: {
+        width: 8,
+        height: 12
+    },
+
+    reContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#ebebeb',
+        paddingTop: 12,
+        paddingBottom: 12,
+        paddingLeft: 10,
+        paddingRight: 10
+    }
 });

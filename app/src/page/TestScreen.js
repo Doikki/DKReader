@@ -6,6 +6,7 @@ import {
     TextInput,
     Button
 } from 'react-native';
+import ScManager from "../util/ScManager";
 
 let global = require('../global');
 
@@ -36,18 +37,21 @@ export default class TestScreen extends Component {
                     data: this.state.text
                 })}}/>
                 <Text>{this.state.data}</Text>
-                <Button title='取出' onPress={() => {global.storage.getIdsForKey('sc').then((data) => {
-                    let ids = '';
-                    data.map(item =>{
-                       ids = ids + item + ',';
+                <Button title='取出' onPress={() => {
+                    ScManager.getScIdList((data) => {
+                        let ids = '';
+                        data.map(item =>{
+                            ids = ids + item + ',';
+                        });
+                        this.setState({
+                            data: ids
+                        });
                     });
-                    this.setState({
-                        data: ids
-                    })
-                })}}/>
+                }}/>
+
                 <Button title='清除' onPress={() => {
                     // global.storage.remove({key: 'sc'});
-                    global.storage.clearMapForKey('sc');
+                    ScManager.removeAllScSite();
                 }}/>
             </View>
             )

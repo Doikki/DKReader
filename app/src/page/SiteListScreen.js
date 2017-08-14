@@ -5,12 +5,13 @@ import {
 } from 'react-native';
 import HttpUtil from "../util/HttpUtil";
 import SiteItem from "../component/SiteItem";
+import ScManager from "../util/ScManager";
 
 const url = 'http://reader.smartisan.com/index.php';
 let global = require('../global');
 
+export default class SiteListScreen extends Component {
 
-export default class CateScreen extends Component {
 
     static navigationOptions = ({navigation}) => ({
         headerTitle: navigation.state.params.title,
@@ -20,6 +21,7 @@ export default class CateScreen extends Component {
         super();
         this.index = 0;
         this.data = [];
+        this.count = 0;
         this.state = {
             dataSource: new ListView.DataSource({//数据源
                 rowHasChanged: (row1, row2) => row1 !== row2,
@@ -31,24 +33,59 @@ export default class CateScreen extends Component {
     }
 
     componentDidMount() {
-        this.getData();
+        this.initData();
     }
 
-    getData() {
-        let params = {
-            r: "site/search",
-            cate_id: this.props.navigation.state.params.id,
-            page_size: global.pageSize,
-            offset: this.index
-        };
-        HttpUtil.get(url, params, (responseData) => {
+    initData() {
+        console.log('initdata');
+        ScManager.getScIdList(idList => {
+            this.getData(idList);
+        });
+    }
+
+    getData(idList) {
+
+        let {params} = this.props.navigation.state;
+
+        let p = '';
+
+        switch (params.action) {
+            case "site/search":
+                p = {
+                    r: params.action,
+                    cate_id: params.id,
+                    page_size: global.pageSize,
+                    offset: this.index
+                };
+                break;
+            case "myCenter/recommendList":
+                p = {
+                    r: params.action,
+                    page_size: global.pageSize,
+                    offset: this.index
+                };
+                break;
+        }
+
+
+        HttpUtil.get(url, p, (responseData) => {
 
             if (responseData.code !== 0) {
                 this.setState({isLoading: false});
                 return;
             }
             let data = responseData.data.list;
+            this.count = Number(responseData.data.count);
             data.map((item) => {
+                console.log(item.id);
+                let isSc = false;
+                for (let i = 0; i < idList.length; i++) {
+                    if (item.id === idList[i]) {
+                        isSc = true;
+                        break;
+                    }
+                }
+                item.isSc = isSc;
                 this.data.push(item);
             });
             this.setState({
@@ -59,6 +96,7 @@ export default class CateScreen extends Component {
     }
 
     render() {
+        console.log("render...");
         return (<ListView
             style={{backgroundColor: 'white'}}
             dataSource={this.state.dataSource}
@@ -68,10 +106,11 @@ export default class CateScreen extends Component {
             refreshControl={//下拉刷新
                 <RefreshControl
                     refreshing={this.state.isLoading}
+                    colors={[global.themeColor]}
                     onRefresh={() => {
                         this.index = 0;
                         this.data = [];
-                        this.getData();
+                        this.initData();
                     }}
                 />}
         />)
@@ -79,12 +118,12 @@ export default class CateScreen extends Component {
 
     _onEndReached() {
         if (this.state.isLoading) return;
-        if (this.data.length % global.pageSize !== 0) return;
+        if (this.count === this.data.length) return;
         this.setState({
             isLoading: true
         });
         this.index++;
-        this.getData();
+        this.initData();
     }
 
     renderRow(rowData) {
@@ -92,9 +131,12 @@ export default class CateScreen extends Component {
             pic={rowData.pic}
             name={rowData.name}
             showMark={false}
-            brief={rowData.brief} onItemPress={() => {
-            this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
-        }}/>
+            brief={rowData.brief}
+            siteInfo={rowData}
+            isSc={rowData.isSc}
+            ref="siteItem"
+            onItemPress={() => {
+                this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
+            }}/>
     }
 }
-

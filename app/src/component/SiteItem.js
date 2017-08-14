@@ -1,4 +1,4 @@
-import React, {Component,PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
     StyleSheet,
     Text,
@@ -6,18 +6,51 @@ import {
     View,
     Image
 } from 'react-native';
+import ScManager from "../util/ScManager";
+import {PubSub} from 'pubsub-js';
 
 let global = require('../global');
 
 export default class SiteItem extends Component {
 
-    static defaultProps={
+    static defaultProps = {
         showMark: true,
+        isSc: false
     };
 
-    static propTypes={
-        showMark:PropTypes.bool,
+    static propTypes = {
+        showMark: PropTypes.bool,
+        isSc: PropTypes.bool,
     };
+
+    constructor() {
+        super();
+        this.state = {
+            isSc: false
+        };
+    }
+
+    componentWillMount() {
+        console.log('mount...');
+        this.token = PubSub.subscribe(this.props.siteInfo.name, (msg, data) => {
+            console.log(msg);
+            console.log(data.toString());
+            this.setState({isSc: data});
+        });
+    }
+
+    componentWillUnmount() {
+        console.log('unmount...');
+        PubSub.unsubscribe(this.token);
+    }
+
+    componentDidMount() {
+        this.setState({isSc: this.props.isSc});
+    }
+
+    componentWillReceiveProps() {
+        this.setState({isSc: this.props.isSc});
+    }
 
 
     render() {
@@ -34,16 +67,30 @@ export default class SiteItem extends Component {
                             <Text style={{fontSize: 16, color: 'black'}}>{this.props.name}</Text>
                             {mark}
                         </View>
-                        <Text>{this.props.brief}</Text>
+                        <Text style={{fontSize: 12, marginTop: 2}}>{this.props.brief}</Text>
                     </View>
                     <TouchableOpacity onPress={() => {
+                        this.onSc();
                     }}>
-                        <Text style={styles.scBtn}>订阅</Text>
+                        <Text style={styles.scBtn}>{this.state.isSc ? "已订阅" : "订阅"}</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
             <View style={styles.siteLine}/>
         </View>
+    }
+
+    onSc() {
+        let siteInfo = this.props.siteInfo;
+        if (this.state.isSc) {
+            ScManager.removeScSiteById(siteInfo.id);
+            this.setState({isSc: false});
+        } else {
+            ScManager.addScSite(siteInfo);
+            this.setState({isSc: true});
+        }
+
+        this.forceUpdate();
     }
 }
 

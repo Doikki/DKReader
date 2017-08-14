@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import NewsItem from "../component/NewsItem";
 import HttpUtil from "../util/HttpUtil";
+import ScManager from "../util/ScManager";
 
 let global = require('../global');
 
@@ -88,7 +89,7 @@ export default class HomeScreen extends Component {
     }
 
     getHomeData() {
-        global.storage.getIdsForKey(global.scKey).then(data => {
+        ScManager.getScIdList(data => {
 
             let params = {
                 r: 'line/show',
