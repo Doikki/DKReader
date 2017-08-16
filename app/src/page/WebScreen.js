@@ -5,19 +5,26 @@ import {
     WebView,
     Image,
     View,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
 import ScManager from "../util/ScManager";
 import {PubSub} from 'pubsub-js';
+import TitleRight from "../component/TitleRight";
 
 let global = require('../global');
 
 export default class WebScreen extends Component {
 
+
+    static navigationOptions = ({navigation}) => ({
+        headerRight: <TitleRight nav={navigation} artInfo={navigation.state.params.data}/>
+
+    });
+
     constructor() {
         super();
         this.state = {
-            isSc: false
+            isSc: false,
         };
     }
 
@@ -26,7 +33,7 @@ export default class WebScreen extends Component {
         ScManager.getScIdList(data => {
             if (data.length > 0) {
                 data.map((item) => {
-                    if (params.siteInfo.id === item) {
+                    if (params.data.site_info.id === item) {
                         this.setState({isSc: true});
                     }
                 });
@@ -36,11 +43,12 @@ export default class WebScreen extends Component {
 
     render() {
         const {params} = this.props.navigation.state;
+        let siteInfo = params.data.site_info;
         return (
             <View style={{flex: 1}}>
                 <View style={styles.scContainer}>
-                    <Image style={styles.siteImg} source={{uri: params.siteImg}}/>
-                    <Text style={styles.siteName}>{params.siteName}</Text>
+                    <Image style={styles.siteImg} source={{uri: siteInfo.pic}}/>
+                    <Text style={styles.siteName}>{siteInfo.name}</Text>
                     <TouchableOpacity onPress={() => {
                         this.onSc(params)
                     }}>
@@ -51,7 +59,7 @@ export default class WebScreen extends Component {
                     <WebView
                         javaScriptEnabled={true}
                         startInLoadingState={true}
-                        source={{uri: params.url}}/>
+                        source={{uri: params.data.origin_url}}/>
                 </View>
             </View>
         )
@@ -83,8 +91,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingRight: 20,
         paddingLeft: 20,
-        paddingTop: 16,
-        paddingBottom: 16,
+        paddingTop: 12,
+        paddingBottom: 12,
     },
     sc: {
         flex: 0

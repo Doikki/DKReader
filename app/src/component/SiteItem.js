@@ -31,7 +31,6 @@ export default class SiteItem extends Component {
     }
 
     componentWillMount() {
-        console.log('mount...');
         this.token = PubSub.subscribe(this.props.siteInfo.name, (msg, data) => {
             console.log(msg);
             console.log(data.toString());
@@ -40,18 +39,12 @@ export default class SiteItem extends Component {
     }
 
     componentWillUnmount() {
-        console.log('unmount...');
         PubSub.unsubscribe(this.token);
     }
 
     componentDidMount() {
         this.setState({isSc: this.props.isSc});
     }
-
-    componentWillReceiveProps() {
-        this.setState({isSc: this.props.isSc});
-    }
-
 
     render() {
         let mark = this.props.showMark ? <Text
@@ -89,8 +82,6 @@ export default class SiteItem extends Component {
             ScManager.addScSite(siteInfo);
             this.setState({isSc: true});
         }
-
-        this.forceUpdate();
     }
 }
 

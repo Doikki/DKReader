@@ -37,7 +37,6 @@ export default class SiteListScreen extends Component {
     }
 
     initData() {
-        console.log('initdata');
         ScManager.getScIdList(idList => {
             this.getData(idList);
         });
@@ -77,7 +76,6 @@ export default class SiteListScreen extends Component {
             let data = responseData.data.list;
             this.count = Number(responseData.data.count);
             data.map((item) => {
-                console.log(item.id);
                 let isSc = false;
                 for (let i = 0; i < idList.length; i++) {
                     if (item.id === idList[i]) {
@@ -96,7 +94,6 @@ export default class SiteListScreen extends Component {
     }
 
     render() {
-        console.log("render...");
         return (<ListView
             style={{backgroundColor: 'white'}}
             dataSource={this.state.dataSource}

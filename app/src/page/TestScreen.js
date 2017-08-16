@@ -38,7 +38,16 @@ export default class TestScreen extends Component {
                 })}}/>
                 <Text>{this.state.data}</Text>
                 <Button title='取出' onPress={() => {
-                    ScManager.getScIdList((data) => {
+                    // ScManager.getScIdList((data) => {
+                    //     let ids = '';
+                    //     data.map(item =>{
+                    //         ids = ids + item + ',';
+                    //     });
+                    //     this.setState({
+                    //         data: ids
+                    //     });
+                    // });
+                    ScManager.getFavIdList((data) => {
                         let ids = '';
                         data.map(item =>{
                             ids = ids + item + ',';
@@ -51,7 +60,8 @@ export default class TestScreen extends Component {
 
                 <Button title='清除' onPress={() => {
                     // global.storage.remove({key: 'sc'});
-                    ScManager.removeAllScSite();
+                    // ScManager.removeAllScSite();
+                    ScManager.removeAllFavArt();
                 }}/>
             </View>
             )

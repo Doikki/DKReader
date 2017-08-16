@@ -1,6 +1,7 @@
 let global = require('../global');
 
 let scKey = 'sc';
+let favKey = 'fav';
 
 export default class ScManager {
 
@@ -43,5 +44,42 @@ export default class ScManager {
             id: siteInfo.id,
             data: siteInfo
         });
+    }
+
+    static addFavArt(artInfo) {
+        global.storage.save({
+            key: favKey,
+            id: artInfo.id,
+            data: artInfo
+        });
+    }
+
+    /**
+     * 获取收藏列表
+     * @returns 收藏列表
+     */
+    static getFavList(callback) {
+        global.storage.getAllDataForKey(favKey).then((data) => {
+            callback(data);
+        });
+    }
+
+
+    static getFavIdList(callback) {
+        global.storage.getIdsForKey(favKey).then((data) => {
+            callback(data);
+        });
+    }
+
+    /**
+     * 通过id清除收藏文章
+     * @param id 收藏文章id
+     */
+    static removeFavArtById(id) {
+        global.storage.remove({key: favKey, id: id});
+    }
+
+    static removeAllFavArt() {
+        global.storage.clearMapForKey(favKey);
     }
 }

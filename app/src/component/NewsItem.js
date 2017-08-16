@@ -28,11 +28,7 @@ export default class NewsItem extends Component {
             <View>
                 <TouchableNativeFeedback
                     onPress={() => {
-                        this.props.navigation.navigate('Web', {url: itemData.origin_url,
-                            title: itemData.title,
-                            siteImg: itemData.site_info.pic,
-                            siteName: itemData.site_info.name,
-                            siteInfo: itemData.site_info});
+                        this.props.navigation.navigate('Web', {data: itemData});
                     }}>
                     <View style={styles.container}>
                         <Text style={styles.title} numberOfLines={2}>{itemData.title}</Text>

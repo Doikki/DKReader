@@ -11,6 +11,8 @@ import TestScreen from "./page/TestScreen";
 import SiteScreen from "./page/SiteScreen";
 import SiteListScreen from "./page/SiteListScreen";
 import MyScListScreen from "./page/MyScListScreen";
+import MyFavListScreen from "./page/MyFavListScreen";
+import AboutScreen from "./page/AboutScreen";
 
 
 const Nav = StackNavigator({
@@ -23,7 +25,9 @@ const Nav = StackNavigator({
     Test: {screen: TestScreen},
     Site: {screen: SiteScreen},
     SiteList: {screen: SiteListScreen},
-    MySc: {screen: MyScListScreen}
+    MySc: {screen: MyScListScreen},
+    MyFav: {screen: MyFavListScreen},
+    About: {screen: AboutScreen}
 });
 
 export default Nav;

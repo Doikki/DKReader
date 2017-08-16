@@ -41,6 +41,7 @@ export default class MyScListScreen extends Component {
             style={{backgroundColor: 'white'}}
             dataSource={this.state.dataSource}
             renderRow={this.renderRow.bind(this)}
+            enableEmptySections={true}
         />)
     }
 

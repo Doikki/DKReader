@@ -4,7 +4,9 @@ import {
     Text,
     ScrollView,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    Share,
+    Image
 } from 'react-native';
 
 let global = require('../global');
@@ -16,43 +18,64 @@ export default class UsrScreen extends Component {
         return (<ScrollView style={{backgroundColor: 'white'}}>
             <View>
 
-
                 <TouchableOpacity style={styles.item} onPress={() => {
                     this.props.navigation.navigate('MySc', {title: "我的订阅"});
                 }}>
-                    <Text style={styles.text}>订阅列表</Text>
+                    <Image style={{width: 20, height: 20, tintColor: global.themeColor}}
+                           source={require('../../img/tab_subscribe.png')}/>
+                    <Text style={styles.text}>我的订阅</Text>
 
                 </TouchableOpacity>
 
                 <View style={styles.line}/>
-                <TouchableOpacity style={styles.item}>
+                <TouchableOpacity style={styles.item} onPress={() => {
+                    this.props.navigation.navigate('MyFav', {title: "我的收藏"});
+                }}>
+                    <Image style={{width: 20, height: 20, tintColor: global.themeColor}}
+                           source={require('../../img/ic_action_favorite_s.png')}/>
                     <Text style={styles.text}>我的收藏</Text>
 
                 </TouchableOpacity>
 
-                <View style={styles.line}/>
-                <TouchableOpacity style={styles.item}>
-                    <Text style={styles.text}>文章字号</Text>
+                {/*<View style={styles.line}/>*/}
+                {/*<TouchableOpacity style={styles.item}>*/}
+                {/*<Text style={styles.text}>文章字号</Text>*/}
 
-                </TouchableOpacity>
-
-                <View style={styles.line}/>
-                <TouchableOpacity style={styles.item}>
-                    <Text style={styles.text}>分享</Text>
-
-                </TouchableOpacity>
+                {/*</TouchableOpacity>*/}
 
                 <View style={styles.line}/>
-                <TouchableOpacity style={styles.item}>
-                    <Text style={styles.text}>清除缓存</Text>
-
-                </TouchableOpacity>
-
-                <View style={styles.line}/>
-
-                <TouchableOpacity style={styles.item} onLongPress={() => {
-                    this.props.navigation.navigate('Test');
+                <TouchableOpacity style={styles.item} onPress={() => {
+                    Share.share({
+                        message: '发现了一款非常美观的App「水滴阅读」，上千个频道任意读，完全开源不收费，太赞了! 推荐~：https://fir.im/zr1b',
+                        title: '分享此应用'
+                    }, {
+                        dialogTitle: '分享此应用',
+                    }).then()
                 }}>
+                    <Image style={{width: 20, height: 20, tintColor: global.themeColor}}
+                           source={require('../../img/ic_action_share.png')}/>
+                    <Text style={styles.text}>分享此应用</Text>
+
+                </TouchableOpacity>
+
+                {/*<View style={styles.line}/>*/}
+                {/*<TouchableOpacity style={styles.item}>*/}
+                {/*<Text style={styles.text}>清除缓存</Text>*/}
+
+                {/*</TouchableOpacity>*/}
+
+                <View style={styles.line}/>
+
+                <TouchableOpacity
+                    style={styles.item}
+                    onLongPress={() => {
+                        this.props.navigation.navigate('Test');
+                    }}
+                    onPress={() => {
+                        this.props.navigation.navigate('About');
+                    }}>
+                    <Image style={{width: 20, height: 20, tintColor: global.themeColor}}
+                           source={require('../../img/ic_action_info.png')}/>
                     <Text style={styles.text}>关于</Text>
 
                 </TouchableOpacity>
@@ -78,6 +101,7 @@ const styles = StyleSheet.create({
     item: {
         height: 50,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingLeft: 10
     }
 });
