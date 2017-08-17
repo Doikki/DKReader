@@ -58,7 +58,7 @@ export default class SiteItem extends Component {
         let mark = showMark && siteInfo.cate_info && siteInfo.cate_info[0] ? <Text
             style={styles.mark}>{siteInfo.cate_info[0].name}</Text> : null;
         return <View>
-            <TouchableNativeFeedback onPress={() => {
+            <TouchableOpacity onPress={() => {
                 if (this.props.onItemPress) this.props.onItemPress();
             }}>
                 <View style={{alignItems: 'center', flexDirection: 'row', padding: 10}}>
@@ -76,7 +76,7 @@ export default class SiteItem extends Component {
                         <Text style={styles.scBtn}>{this.state.isSc ? "已订阅" : "订阅"}</Text>
                     </TouchableOpacity>
                 </View>
-            </TouchableNativeFeedback>
+            </TouchableOpacity>
             <View style={styles.siteLine}/>
         </View>
     }

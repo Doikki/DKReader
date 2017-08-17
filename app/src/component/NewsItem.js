@@ -26,7 +26,7 @@ export default class NewsItem extends Component {
         // const {navigate} = this.props.navigation;
         return (
             <View>
-                <TouchableNativeFeedback
+                <TouchableOpacity
                     onPress={() => {
                         this.props.navigation.navigate('Web', {data: itemData});
                     }}>
@@ -41,7 +41,7 @@ export default class NewsItem extends Component {
                             <Text style={{fontSize:12}}>{itemData.site_info.name}</Text>
                         </View>
                     </View>
-                </TouchableNativeFeedback>
+                </TouchableOpacity>
                 <View style={styles.divider}/>
             </View>
 

@@ -32,7 +32,7 @@ export default class AboutScreen extends Component {
             <View>
                 <View style={{paddingTop: 20, paddingBottom: 20, alignItems: 'center'}}>
                     <Image style={{width: 90, height: 90}} source={require('../../img/ic_launcher.png')}/>
-                    <Text style={{fontSize: 18, color: 'black', paddingTop: 10}}>水滴阅读 - 程序猿的骄傲与喜悦</Text>
+                    <Text style={{fontSize: 18, color: 'black', paddingTop: 10}}>水滴阅读</Text>
                     <Text style={{fontSize: 12, color: 'gray', paddingTop: 10}}>version 1.0</Text>
 
                 </View>

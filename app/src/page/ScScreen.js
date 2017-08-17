@@ -116,12 +116,15 @@ export default class ScScreen extends Component {
                     margin: 4
                 }}/>}
                 style={{width: global.screenWidth, height: 180}}>
-                {this.state.dataSourceBanner.map((data) => {
-                    return <TouchableWithoutFeedback key={data.id} onPress={() => {
+                {this.state.dataSourceBanner.map((data, key) => {
+                    return <TouchableWithoutFeedback key={key} onPress={() => {
                         this.props.navigation.navigate('Site', {id: data.id, title: data.name});
                     }}>
-                        <Image style={{height: 160, width: global.screenWidth - 20, borderRadius: 6, margin: 10}}
-                               source={{uri: data.banner}}/>
+                        <View style={{width: global.screenWidth, height: 180}}>
+                            <Image style={{height: 160, width: global.screenWidth - 20, borderRadius: 6, margin: 10,backgroundColor:'red', resizeMode: 'stretch'}}
+                                     source={{uri: data.banner}}/>
+                        </View>
+
                     </TouchableWithoutFeedback>
                 })}
             </Swiper>
