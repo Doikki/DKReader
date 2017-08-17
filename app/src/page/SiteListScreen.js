@@ -125,13 +125,9 @@ export default class SiteListScreen extends Component {
 
     renderRow(rowData) {
         return <SiteItem
-            pic={rowData.pic}
-            name={rowData.name}
-            showMark={false}
-            brief={rowData.brief}
+            showMark={this.props.navigation.state.params.showMark}
             siteInfo={rowData}
             isSc={rowData.isSc}
-            ref="siteItem"
             onItemPress={() => {
                 this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
             }}/>

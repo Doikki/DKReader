@@ -10,8 +10,10 @@ import {
 import ScManager from "../util/ScManager";
 import {PubSub} from 'pubsub-js';
 import TitleRight from "../component/TitleRight";
+import HttpUtil from "../util/HttpUtil";
 
 let global = require('../global');
+let url = 'http://reader.smartisan.com/index.php';
 
 export default class WebScreen extends Component {
 
@@ -41,6 +43,17 @@ export default class WebScreen extends Component {
         });
     }
 
+    getCateInfo(id, name) {
+        let params = {r: 'site/GetInfoById', site_id: id};
+        HttpUtil.get(url, params, data => {
+            if (data.code === 0) {
+                ScManager.addScSite(data.data);
+                this.setState({isSc: true});
+                PubSub.publish(name, true);
+            }
+        })
+    }
+
     render() {
         const {params} = this.props.navigation.state;
         let siteInfo = params.data.site_info;
@@ -50,7 +63,7 @@ export default class WebScreen extends Component {
                     <Image style={styles.siteImg} source={{uri: siteInfo.pic}}/>
                     <Text style={styles.siteName}>{siteInfo.name}</Text>
                     <TouchableOpacity onPress={() => {
-                        this.onSc(params)
+                        this.onSc(siteInfo)
                     }}>
                         <Text style={styles.scBtn}>{this.state.isSc ? '已订阅' : '订阅'}</Text>
                     </TouchableOpacity>
@@ -65,16 +78,13 @@ export default class WebScreen extends Component {
         )
     }
 
-    onSc(params) {
-        let siteInfo = params.siteInfo;
+    onSc(siteInfo) {
         if (this.state.isSc) {
             ScManager.removeScSiteById(siteInfo.id);
             this.setState({isSc: false});
             PubSub.publish(siteInfo.name, false);
         } else {
-            ScManager.addScSite(siteInfo);
-            this.setState({isSc: true});
-            PubSub.publish(siteInfo.name, true);
+            this.getCateInfo(siteInfo.id, siteInfo.name);
         }
 
     }

@@ -46,7 +46,7 @@ export default class UsrScreen extends Component {
                 <View style={styles.line}/>
                 <TouchableOpacity style={styles.item} onPress={() => {
                     Share.share({
-                        message: '发现了一款非常美观的App「水滴阅读」，上千个频道任意读，完全开源不收费，太赞了! 推荐~：https://fir.im/zr1b',
+                        message: '发现了一款非常美观的App「水滴阅读」，上千个频道任意读，完全开源不收费，太赞了! 推荐~：https://fir.im/8vdc',
                         title: '分享此应用'
                     }, {
                         dialogTitle: '分享此应用',

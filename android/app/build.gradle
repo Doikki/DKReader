@@ -90,7 +90,7 @@ android {
     buildToolsVersion '25.0.3'
 
     defaultConfig {
-        applicationId "com.dcreader"
+        applicationId "com.devlin_n.dcreader"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

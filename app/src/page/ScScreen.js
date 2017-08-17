@@ -129,7 +129,11 @@ export default class ScScreen extends Component {
         </View> : null;
         let site = <View>
             <TouchableWithoutFeedback onPress={() => {
-                this.props.navigation.navigate('SiteList', {title: '编辑推荐站点', action: "myCenter/recommendList"});
+                this.props.navigation.navigate('SiteList', {
+                    title: '编辑推荐站点',
+                    action: "myCenter/recommendList",
+                    showMark: true
+                });
             }}>
                 <View style={styles.reContainer}>
                     <Text style={styles.reTitle}>编辑推荐站点</Text>
@@ -174,13 +178,8 @@ export default class ScScreen extends Component {
     renderSite(rowData) {
         return (
             <SiteItem
-                pic={rowData.pic}
-                name={rowData.name}
-                cateName={rowData.cate_info[0].name}
-                brief={rowData.brief}
                 siteInfo={rowData}
                 showMark={true}
-                isSc={rowData.isSc}
                 onItemPress={() => {
                     // ToastAndroid.show('点击了' + rowID, ToastAndroid.SHORT);
                     this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
@@ -200,10 +199,17 @@ export default class ScScreen extends Component {
                         this.props.navigation.navigate('SiteList', {
                             title: rowData.name,
                             id: rowData.id,
-                            action: "site/search"
+                            action: "site/search",
+                            showMark: false
                         });
                     }}>
-                        <View style={{paddingLeft: 10, paddingRight:10, height: 60, flexDirection: 'row', alignItems: 'center'}}>
+                        <View style={{
+                            paddingLeft: 10,
+                            paddingRight: 10,
+                            height: 60,
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}>
                             <Image source={{uri: rowData.icon}} style={styles.cateIconStyle}/>
                             <Text style={styles.cateName}>{rowData.name}</Text>
                             <Image style={styles.moreIcon} source={require('../../img/more.png')}/>

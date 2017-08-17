@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    TouchableNativeFeedback,
     View,
     Image
 } from 'react-native';
@@ -32,8 +33,6 @@ export default class SiteItem extends Component {
 
     componentWillMount() {
         this.token = PubSub.subscribe(this.props.siteInfo.name, (msg, data) => {
-            console.log(msg);
-            console.log(data.toString());
             this.setState({isSc: data});
         });
     }
@@ -46,21 +45,30 @@ export default class SiteItem extends Component {
         this.setState({isSc: this.props.isSc});
     }
 
+    /**
+     * props改变时调用
+     * @param nextProps 即将被设置的props，旧的props还是可通过this.props获取
+     */
+    componentWillReceiveProps(nextProps) {
+        this.setState({isSc: nextProps.siteInfo.isSc})
+    }
+
     render() {
-        let mark = this.props.showMark ? <Text
-            style={styles.mark}>{this.props.cateName}</Text> : null;
+        let {siteInfo, showMark} = this.props;
+        let mark = showMark && siteInfo.cate_info && siteInfo.cate_info[0] ? <Text
+            style={styles.mark}>{siteInfo.cate_info[0].name}</Text> : null;
         return <View>
-            <TouchableOpacity onPress={() => {
+            <TouchableNativeFeedback onPress={() => {
                 if (this.props.onItemPress) this.props.onItemPress();
             }}>
                 <View style={{alignItems: 'center', flexDirection: 'row', padding: 10}}>
-                    <Image source={{uri: this.props.pic}} style={styles.siteIconStyle}/>
+                    <Image source={{uri: siteInfo.pic}} style={styles.siteIconStyle}/>
                     <View style={{flex: 1}}>
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <Text style={{fontSize: 16, color: 'black'}}>{this.props.name}</Text>
+                            <Text style={{fontSize: 16, color: 'black'}}>{siteInfo.name}</Text>
                             {mark}
                         </View>
-                        <Text style={{fontSize: 12, marginTop: 2}}>{this.props.brief}</Text>
+                        <Text style={{fontSize: 12, marginTop: 2}}>{siteInfo.brief}</Text>
                     </View>
                     <TouchableOpacity onPress={() => {
                         this.onSc();
@@ -68,7 +76,7 @@ export default class SiteItem extends Component {
                         <Text style={styles.scBtn}>{this.state.isSc ? "已订阅" : "订阅"}</Text>
                     </TouchableOpacity>
                 </View>
-            </TouchableOpacity>
+            </TouchableNativeFeedback>
             <View style={styles.siteLine}/>
         </View>
     }

@@ -48,12 +48,10 @@ export default class MyScListScreen extends Component {
 
     renderRow(rowData) {
         return <SiteItem
-            pic={rowData.pic}
-            name={rowData.name}
-            showMark={false}
+            showMark={true}
             siteInfo={rowData}
             isSc={true}
-            brief={rowData.brief} onItemPress={() => {
+            onItemPress={() => {
             this.props.navigation.navigate('Site', {id: rowData.id, title: rowData.name});
         }}/>
     }
