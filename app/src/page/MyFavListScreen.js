@@ -4,7 +4,7 @@ import {
     View,
     Text,
     Image,
-    TouchableNativeFeedback
+    TouchableOpacity
 } from 'react-native';
 import ScManager from "../util/ScManager";
 let global = require('../global');
@@ -52,7 +52,7 @@ export default class MyFavListScreen extends Component {
 
     renderRow(rowData) {
         return <View>
-            <TouchableNativeFeedback onPress={() => {
+            <TouchableOpacity onPress={() => {
                 this.props.navigation.navigate('Web', {data: rowData});
             }}>
                 <View style={{padding: 10}}>
@@ -62,7 +62,7 @@ export default class MyFavListScreen extends Component {
                         <Text style={{fontSize: 12, marginLeft: 4}}>{rowData.site_info.name}</Text>
                     </View>
                 </View>
-            </TouchableNativeFeedback>
+            </TouchableOpacity>
             <View style={{width: global.screenWidth, height: 0.5, backgroundColor: global.lineColor}}/>
             </View>
 
